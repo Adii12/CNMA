@@ -4,25 +4,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.reea.cnma.models.Movie
 import kotlinx.android.synthetic.main.recyclelist_item.view.*
 
-class RecyclerViewAdapter(private val exampleList: List<ExampleItem>) : RecyclerView.Adapter<RecyclerViewAdapter.ExampleViewHolder>() {
+class RecyclerViewAdapter(private val exampleList: LiveData<List<Movie>>?) : RecyclerView.Adapter<RecyclerViewAdapter.MovieHolder>() {
+    private var movies : List<Movie> = ArrayList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.recyclelist_item, parent, false)
-        return ExampleViewHolder(itemView)
+        return MovieHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
-        val currentItem = exampleList[position]
-        holder.textView1.text = currentItem.text1
-        holder.textView2.text = currentItem.text2
+    override fun onBindViewHolder(holder: MovieHolder, position: Int) {
+        val currentMovie = movies.get(position)
+        holder.textView1.text = currentMovie.Title
+        holder.textView2.text = currentMovie.Year
     }
 
-    override fun getItemCount() = exampleList.size
+    override fun getItemCount() = movies.size
 
-    class ExampleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun setMovies(movies : List<Movie>){
+        this.movies = movies
+        notifyDataSetChanged()
+    }
+
+    class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView1: TextView = itemView.testText1
         val textView2: TextView = itemView.testText2
     }
