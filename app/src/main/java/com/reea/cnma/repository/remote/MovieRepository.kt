@@ -1,6 +1,7 @@
-package com.reea.cnma.repository
+package com.reea.cnma.repository.remote
 
 import androidx.lifecycle.MutableLiveData
+import com.reea.cnma.models.Movie
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,10 +17,11 @@ class MovieRepository() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private var movieService: MovieApiEndpoints = retrofit.create(MovieApiEndpoints::class.java)
+    private var movieService: MovieApiEndpoints = retrofit.create(
+        MovieApiEndpoints::class.java)
 
-    fun getMovie(title : String) : MutableLiveData<Movie>?{
-        var result  = MutableLiveData<Movie>()
+    fun getMovie(title : String) : MutableLiveData<Movie> {
+        val result  = MutableLiveData<Movie>()
 
         val call = movieService.getMovie(apikey, title)
 
@@ -34,7 +36,22 @@ class MovieRepository() {
                 }
             }
         })
+        return result
+    }
 
+    fun searchMovie(searchText : String) : MutableLiveData<List<Movie>>? {
+        var result = MutableLiveData<List<Movie>>()
+        val call = movieService.searchMovie(apikey, searchText)
+
+        call.enqueue(object : Callback<List<Movie>> {
+            override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
+                t.printStackTrace()
+            }
+
+            override fun onResponse(call: Call<List<Movie>>, response: Response<List<Movie>>) {
+                result.value=response.body()
+            }
+        })
         return result
     }
 

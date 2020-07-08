@@ -2,26 +2,45 @@ package com.reea.cnma
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.reea.cnma.models.Movie
+import com.reea.cnma.repository.local.DatabaseRepository
+import com.reea.cnma.repository.remote.MovieRepository
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.recyclelist_item.*
 
 class MainActivity : AppCompatActivity() {
+    private var db : DatabaseRepository? = null
+    private lateinit var api : MovieRepository
+    private var moviesList = db?.getAllMovies()
+    private lateinit var adapter: RecyclerViewAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var exampleList = generateItems(10)
-        recyclerViewItems.adapter = RecyclerViewAdapter(exampleList)
+        adapter = RecyclerViewAdapter(moviesList)
+        recyclerViewItems.adapter = adapter
         recyclerViewItems.layoutManager = LinearLayoutManager(this)
         recyclerViewItems.setHasFixedSize(true)
-    }
 
-    private fun generateItems(size: Int) : List<ExampleItem> {
-        val list = ArrayList<ExampleItem>()
-        for (i in 0 until size) {
-            val item = ExampleItem("item $i", "item $i")
-            list += item
-        }
-        return list
+        db = DatabaseRepository(application)
+        api = MovieRepository()
+
+        /*var movie : MutableLiveData<Movie>
+        api.getMovie("Batman").observe(this, object : Observer<Movie> {
+            override fun onChanged(movie : Movie?) {
+                println(movie?.Title)
+                db?.insert(movie!!)
+            }
+        })*/
+
+        var movies = db?.getAllMovies()?.observe(this, object : Observer<List<Movie>> {
+            override fun onChanged(moviesList: List<Movie>?) {
+                if (moviesList != null) {
+                    adapter.setMovies(moviesList)
+                }
+            }
+        })
     }
 }
