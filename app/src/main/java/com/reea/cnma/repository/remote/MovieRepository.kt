@@ -2,6 +2,7 @@ package com.reea.cnma.repository.remote
 
 import androidx.lifecycle.MutableLiveData
 import com.reea.cnma.models.Movie
+import com.reea.cnma.models.Movies
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,19 +41,21 @@ class MovieRepository() {
     }
 
     fun searchMovie(searchText : String) : MutableLiveData<List<Movie>>? {
-        var result = MutableLiveData<List<Movie>>()
+        var result : List<Movie>?
+        var liveData = MutableLiveData<List<Movie>>()
         val call = movieService.searchMovie(apikey, searchText)
 
-        call.enqueue(object : Callback<List<Movie>> {
-            override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
+        call.enqueue(object : Callback<Movies> {
+            override fun onFailure(call: Call<Movies>, t: Throwable) {
                 t.printStackTrace()
             }
 
-            override fun onResponse(call: Call<List<Movie>>, response: Response<List<Movie>>) {
-                result.value=response.body()
+            override fun onResponse(call: Call<Movies>, response: Response<Movies>) {
+                result = response.body()?.result
+                liveData.value=result
             }
         })
-        return result
+        return liveData
     }
 
 }

@@ -3,10 +3,14 @@ package com.reea.cnma
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import com.reea.cnma.adapters.GridSpacingItemDecoration
+import com.reea.cnma.adapters.RecyclerViewAdapter
 import com.reea.cnma.models.Movie
 import com.reea.cnma.repository.local.DatabaseRepository
 import com.reea.cnma.repository.remote.MovieRepository
+import com.reea.cnma.viewModels.HomeScreenViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,28 +23,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = RecyclerViewAdapter(moviesList)
-        recyclerViewItems.adapter = adapter
-        recyclerViewItems.layoutManager = LinearLayoutManager(this)
-        recyclerViewItems.setHasFixedSize(true)
+        adapter = RecyclerViewAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(GridSpacingItemDecoration(3,50,true))
+        recyclerView.layoutManager = GridLayoutManager(this,3)
+        recyclerView.setHasFixedSize(true)
 
-        db = DatabaseRepository(application)
-        api = MovieRepository()
-
-        /*var movie : MutableLiveData<Movie>
-        api.getMovie("Batman").observe(this, object : Observer<Movie> {
-            override fun onChanged(movie : Movie?) {
-                println(movie?.Title)
-                db?.insert(movie!!)
-            }
-        })*/
-
-        var movies = db?.getAllMovies()?.observe(this, object : Observer<List<Movie>> {
-            override fun onChanged(moviesList: List<Movie>?) {
-                if (moviesList != null) {
-                    adapter.setMovies(moviesList)
-                }
-            }
-        })
+        var model = ViewModelProvider(this@MainActivity).get(HomeScreenViewModel::class.java)
+        model.getMovies()?.observe(this, Observer<List<Movie>> { movies -> adapter.setMovies(movies) })
     }
 }

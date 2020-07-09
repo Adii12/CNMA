@@ -1,15 +1,18 @@
-package com.reea.cnma
+package com.reea.cnma.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.reea.cnma.R
 import com.reea.cnma.models.Movie
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.recyclelist_item.view.*
+import java.util.*
 
-class RecyclerViewAdapter(private val exampleList: LiveData<List<Movie>>?) : RecyclerView.Adapter<RecyclerViewAdapter.MovieHolder>() {
+class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.MovieHolder>() {
     private var movies : List<Movie> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
@@ -19,8 +22,8 @@ class RecyclerViewAdapter(private val exampleList: LiveData<List<Movie>>?) : Rec
 
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
         val currentMovie = movies.get(position)
-        holder.textView1.text = currentMovie.Title
-        holder.textView2.text = currentMovie.Year
+        holder.movieTitle.text = currentMovie.Title
+        Picasso.get().load(currentMovie.Poster).into(holder.moviePoster)
     }
 
     override fun getItemCount() = movies.size
@@ -31,7 +34,7 @@ class RecyclerViewAdapter(private val exampleList: LiveData<List<Movie>>?) : Rec
     }
 
     class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView1: TextView = itemView.testText1
-        val textView2: TextView = itemView.testText2
+        val movieTitle : TextView = itemView.movieTitle
+        val moviePoster: ImageView = itemView.moviePoster
     }
 }

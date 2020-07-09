@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CNMA</string>
+
+    <string name="Home">Home</string>
+    <string name="Favorites">Favorites</string>
+    <string name="Search">Search</string>
 </resources>
