@@ -33,7 +33,6 @@ class HomeScreenAdapter(context: Context) : RecyclerView.Adapter<HomeScreenAdapt
             var detailsActivity = Intent(mContext, MovieDetailsActivity::class.java)
             detailsActivity.putExtra("currentMovie", currentMovie)
             mContext.startActivity(detailsActivity)
-
         }
     }
 

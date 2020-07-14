@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.reea.cnma.models.Movie
 import com.reea.cnma.repository.local.DatabaseRepository
 import com.reea.cnma.viewModels.MovieDetailsScreenViewModel
-import com.reea.cnma.viewModels.MovieDetailsViewModelFactory
+import com.reea.cnma.viewModels.ViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
@@ -56,7 +56,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             movieTitle = currentMovie.Title
         }
 
-        val model = ViewModelProvider(this@MovieDetailsActivity, MovieDetailsViewModelFactory(movieTitle, application)).get(MovieDetailsScreenViewModel::class.java)
+        val model = ViewModelProvider(this@MovieDetailsActivity, ViewModelFactory(movieTitle, application, this@MovieDetailsActivity)).get(MovieDetailsScreenViewModel::class.java)
 
         model.getMovieDetail().observe(this, Observer<Movie> { movie ->
             titleTextView.text = movie.Title

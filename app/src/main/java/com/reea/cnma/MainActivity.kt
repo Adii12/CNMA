@@ -20,12 +20,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var api : MovieRepository
     private var moviesList = db?.getAllMovies()
     private lateinit var adapter: HomeScreenAdapter
+    private lateinit var bottomNav : BottomNavigationView
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        bottomNav = findViewById(R.id.bottomNavigationBar)
         adapter = HomeScreenAdapter(this@MainActivity)
         recyclerView.adapter = adapter
         recyclerView.addItemDecoration(GridSpacingItemDecoration(3, 50, true))
@@ -34,24 +36,23 @@ class MainActivity : AppCompatActivity() {
 
         var model = ViewModelProvider(this@MainActivity).get(HomeScreenViewModel::class.java)
         model.getMovies()?.observe(this, Observer<List<Movie>> { movies -> adapter.setMovies(movies) })
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigationBar)
-        bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelected)
 
-    }
+        bottomNav.selectedItemId = R.id.navigation_home
+        bottomNav.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_favorites -> {
+                    startActivity(Intent(this, FavoritesActivity::class.java))
+                    overridePendingTransition(0,0)
+                }
 
-    private val navigationItemSelected = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_favorites -> {
-                val favoritesIntent = Intent(this@MainActivity, FavoritesActivity::class.java)
-                startActivity(favoritesIntent)
-                return@OnNavigationItemSelectedListener true
+                R.id.navigation_search -> {
+                    startActivity(Intent(this, SearchActivity::class.java))
+                    overridePendingTransition(0,0)
+                }
             }
-            R.id.navigation_search -> {
-                val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
-                startActivity(searchIntent)
-                return@OnNavigationItemSelectedListener true
-            }
+            true
         }
-        false
     }
+
+
 }
