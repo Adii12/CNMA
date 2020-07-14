@@ -205,18 +205,20 @@
         android:drawableTop="@drawable/ic_movie_ticket"
         android:text="Buy Ticket"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/addToFavoritesButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
-    <Button
-        android:id="@+id/button"
+    <ToggleButton
+        android:id="@+id/addToFavoritesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#00FFFFFF"
-        android:drawableTop="@drawable/ic_favorite_no_fill"
+        android:drawableTop="@drawable/favorites_image"
         android:text="Add to favorites"
+        android:textOff="Add to favorites"
+        android:textOn="Remove From favorites"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
