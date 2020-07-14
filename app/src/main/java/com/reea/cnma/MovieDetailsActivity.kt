@@ -1,14 +1,12 @@
 package com.reea.cnma
 
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.reea.cnma.models.Movie
+import com.reea.cnma.repository.local.DatabaseRepository
 import com.reea.cnma.viewModels.MovieDetailsScreenViewModel
 import com.reea.cnma.viewModels.MovieDetailsViewModelFactory
 import com.squareup.picasso.Picasso
@@ -29,10 +27,14 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var movieTitle : String
     private lateinit var genreTextView : TextView
     private lateinit var ratingBar : RatingBar
+    private lateinit var favoriteButton : ToggleButton
+    private lateinit var actualMovie : Movie
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
+
+        val db = DatabaseRepository(application, this@MovieDetailsActivity)
 
         titleTextView = findViewById(R.id.TitleTextView)
         yearTextView = findViewById(R.id.YearTextView)
@@ -45,6 +47,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         imdbRating = findViewById(R.id.imdbRatingTextView)
         poster = findViewById(R.id.PosterImageView)
         ratingBar = findViewById(R.id.ratingBar)
+        favoriteButton = findViewById(R.id.addToFavoritesButton)
 
         currentMovie = intent.getSerializableExtra("currentMovie") as Movie
         val cm  = currentMovie
@@ -68,7 +71,18 @@ class MovieDetailsActivity : AppCompatActivity() {
             actorsTextView.text = movie.Actors
             directorsTextView.text = movie.Director
             Picasso.get().load(movie.Poster).into(poster)
+
+            actualMovie = movie
         })
+        favoriteButton.isChecked = db.getMovie(currentMovie.Title) != null
+
+        favoriteButton.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if(isChecked){
+                db.insert(actualMovie)
+            } else {
+                db.deleteMovie(actualMovie.Title)
+            }
+        }
 
         backButton = findViewById(R.id.backButton)
         backButton.setOnClickListener {

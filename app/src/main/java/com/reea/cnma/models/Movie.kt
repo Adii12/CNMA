@@ -1,5 +1,6 @@
 package com.reea.cnma.models
 
+import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -16,6 +17,7 @@ data class Movie(
     @SerializedName("Year")
     var Year : String,
 
+    @NonNull
     @SerializedName("Rated")
     val Rated : String,
 
