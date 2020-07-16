@@ -42,7 +42,7 @@ class MovieRepository() {
 
     fun searchMovie(searchText : String) : MutableLiveData<List<Movie>>? {
         var result : List<Movie>?
-        var liveData = MutableLiveData<List<Movie>>()
+        val liveData = MutableLiveData<List<Movie>>()
         val call = movieService.searchMovie(apikey, searchText)
 
         call.enqueue(object : Callback<Movies> {

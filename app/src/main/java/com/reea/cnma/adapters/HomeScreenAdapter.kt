@@ -31,7 +31,7 @@ class HomeScreenAdapter(context: Context) : RecyclerView.Adapter<HomeScreenAdapt
 
         holder.itemView.setOnClickListener {
             var detailsActivity = Intent(mContext, MovieDetailsActivity::class.java)
-            detailsActivity.putExtra("currentMovie", currentMovie)
+            detailsActivity.putExtra("currentMovieTitle", currentMovie.Title)
             mContext.startActivity(detailsActivity)
         }
     }
