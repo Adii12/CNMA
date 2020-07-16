@@ -41,10 +41,9 @@ class SearchActivity : AppCompatActivity() {
         searchButton.setOnClickListener {
             searchMovieTitle = searchBar.text.toString()
             model.searchMovie(searchMovieTitle)?.observe(this, Observer<List<Movie>> {
-                searched -> adapter.setSearched(searched)
+                    searched->searched?.let{ adapter.setSearched(searched) }
             })
         }
-
 
         bottomNav.selectedItemId = R.id.navigation_search
         bottomNav.setOnNavigationItemSelectedListener {

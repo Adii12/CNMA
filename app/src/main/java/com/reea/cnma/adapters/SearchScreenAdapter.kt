@@ -33,8 +33,8 @@ class SearchScreenAdapter(context: Context) : RecyclerView.Adapter<SearchScreenA
         Picasso.get().load(currentSearchMovie.Poster).into(holder.moviePoster)
 
         holder.itemView.setOnClickListener {
-            var detailsActivity = Intent(mContext, MovieDetailsActivity::class.java)
-            detailsActivity.putExtra("currentMovie", currentSearchMovie)
+            val detailsActivity = Intent(mContext, MovieDetailsActivity::class.java)
+            detailsActivity.putExtra("currentMovieTitle", currentSearchMovie.Title)
             mContext.startActivity(detailsActivity)
         }
     }

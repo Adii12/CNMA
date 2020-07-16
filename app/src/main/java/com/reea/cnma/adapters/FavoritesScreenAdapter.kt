@@ -35,7 +35,7 @@ class FavoritesScreenAdapter(context: Context) : RecyclerView.Adapter<FavoritesS
 
         holder.itemView.setOnClickListener {
             var detailsActivity = Intent(mContext, MovieDetailsActivity::class.java)
-            detailsActivity.putExtra("currentMovie", currentFavoriteMovie)
+            detailsActivity.putExtra("currentMovieTitle", currentFavoriteMovie.Title)
             mContext.startActivity(detailsActivity)
         }
     }
