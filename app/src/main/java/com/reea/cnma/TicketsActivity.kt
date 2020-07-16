@@ -77,7 +77,17 @@ class TicketsActivity : AppCompatActivity() {
         }
 
         confirmOrderButton.setOnClickListener {
-            Snackbar.make(rootView, "Successfully bought ticket!", Snackbar.LENGTH_LONG).show()
+            if(dateTextView.text == "") {
+                Toast.makeText(this, R.string.select_date_error, Toast.LENGTH_SHORT).show()
+                dateTextView.requestFocus()
+            }
+            else if(selectHour.selectedItem.toString() == "Select hour"){
+                Toast.makeText(this, R.string.select_hour_error, Toast.LENGTH_SHORT).show()
+                selectHour.requestFocus()
+            }
+            else {
+                Snackbar.make(rootView, R.string.successfully_bought, Snackbar.LENGTH_LONG).show()
+            }
         }
 
         backButton.setOnClickListener {

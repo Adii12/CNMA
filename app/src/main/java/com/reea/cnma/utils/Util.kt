@@ -23,6 +23,7 @@ class Util {
 
 
     fun getHours() : ArrayList<String> {
+        hoursArray.add("Select hour")
         hoursArray.add("11:00")
         hoursArray.add("13:00")
         hoursArray.add("15:00")
