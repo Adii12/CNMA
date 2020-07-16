@@ -7,41 +7,35 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.reea.cnma.adapters.FavoritesScreenAdapter
 import com.reea.cnma.adapters.GridSpacingItemDecoration
-import com.reea.cnma.adapters.HomeScreenAdapter
 import com.reea.cnma.models.Movie
-import com.reea.cnma.repository.local.DatabaseRepository
-import com.reea.cnma.repository.remote.MovieRepository
-import com.reea.cnma.viewModels.HomeScreenViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.reea.cnma.viewModels.FavoritesScreenViewModel
+import com.reea.cnma.viewModels.ViewModelFactory
+import kotlinx.android.synthetic.main.activity_favorites.*
 
-class MainActivity : AppCompatActivity() {
-    private var db : DatabaseRepository? = null
-    private lateinit var api : MovieRepository
-    private var moviesList = db?.getAllMovies()
-    private lateinit var adapter: HomeScreenAdapter
+class FavoritesActivity : AppCompatActivity() {
     private lateinit var bottomNav : BottomNavigationView
-
-
+    private lateinit var adapter : FavoritesScreenAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_favorites)
         bottomNav = findViewById(R.id.bottomNavigationBar)
-        adapter = HomeScreenAdapter(this@MainActivity)
-        recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(3, 50, true))
+        adapter = FavoritesScreenAdapter(this@FavoritesActivity)
+        recyclerView.adapter=adapter
         recyclerView.layoutManager = GridLayoutManager(this, 3)
+        recyclerView.addItemDecoration(GridSpacingItemDecoration(3,50, true))
         recyclerView.setHasFixedSize(true)
 
-        var model = ViewModelProvider(this@MainActivity).get(HomeScreenViewModel::class.java)
-        model.getMovies()?.observe(this, Observer<List<Movie>> { movies -> adapter.setMovies(movies) })
+        var model = ViewModelProvider(this@FavoritesActivity, ViewModelFactory("a", application, this@FavoritesActivity)).get(FavoritesScreenViewModel::class.java)
+        model.getFavoriteMovies()?.observe(this, Observer<List<Movie>> { favorites -> adapter.setFavorites(favorites)})
 
-        bottomNav.selectedItemId = R.id.navigation_home
+        bottomNav.selectedItemId = R.id.navigation_favorites
         bottomNav.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.navigation_favorites -> {
-                    startActivity(Intent(this, FavoritesActivity::class.java))
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
                     overridePendingTransition(0,0)
                 }
 
@@ -53,6 +47,4 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-
-
 }
